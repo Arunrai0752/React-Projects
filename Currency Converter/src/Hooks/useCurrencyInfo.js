@@ -3,34 +3,39 @@ import { useState, useEffect } from "react";
 const useCurrencyInfo = (currency) => {
   const [data, setData] = useState({});
   const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!currency) return;
 
     const fetchData = async () => {
+      setIsLoading(true);
       try {
-        const res = await fetch(
-          `https://cdn.jsdelivr.net/gh/fawazahmed0/currency-api@1/latest/currencies/${currency.toLowerCase()}.json`
+        let res = await fetch(
+          `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies/${currency}.json`
         );
 
         if (!res.ok) {
-          throw new Error("Failed to fetch currency data");
+          res = await fetch(`https://api.frankfurter.app/latest?from=${currency}`);
+          if (!res.ok) throw new Error("Both APIs failed");
         }
 
         const result = await res.json();
-        setData(result[currency.toLowerCase()]);
+        setData(result[currency.toLowerCase()] || result.rates); // Handle different API responses
         setError(null);
       } catch (err) {
-        console.error("API fetch error:", err);
+        console.error("Fetch error:", err);
         setError(err.message);
         setData({});
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
   }, [currency]);
 
-  return { data, error };
+  return { data, error, isLoading };
 };
 
 export default useCurrencyInfo;
