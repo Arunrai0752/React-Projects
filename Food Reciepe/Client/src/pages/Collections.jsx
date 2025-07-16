@@ -26,18 +26,18 @@ const Collection = () => {
   if (loading) {
     return (
       <div className="flex justify-center items-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-        <p>Error: {error}</p>
+      <div className="bg-gray-900 border border-purple-700 text-red-400 px-4 py-3 rounded-lg shadow-lg">
+        <p className="font-mono">Error: {error}</p>
         <button 
           onClick={fetchAllBooks}
-          className="mt-2 bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+          className="mt-2 bg-purple-800 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded transition-colors"
         >
           Retry
         </button>
@@ -48,26 +48,27 @@ const Collection = () => {
   if (books.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-gray-500 text-lg">No books found in the collection</p>
+        <p className="text-gray-400 text-lg font-serif">The library appears to be empty...</p>
       </div>
     );
   }
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-8 text-gray-800">Book Collection</h1>
+      <h1 className="text-3xl font-bold mb-8 text-purple-600 font-serif">The Black Library</h1>
       
-      <div className="grid items-center justify-center  gap-6">
-        {books.map((book , index) => (
-          <div key={book._id} className="bg-white rounded-lg shadow-md w-[500px] overflow-hidden hover:shadow-lg transition-shadow">
+      <div className="grid grid-cols-2  items-center justify-between gap-6">
+        {books.map((book, index) => (
+          <div key={book._id} className="bg-gray-800 rounded-lg shadow-lg w-[700px] overflow-hidden hover:shadow-xl transition-all border border-gray-700 hover:border-purple-500">
             <div className="p-6">
-              
-              <h2 className="text-xl font-semibold mb-2 text-gray-800">{index+1}. {book.title}</h2>
-              <p className="text-gray-600 mb-1">Author: {book.author}</p>
-              <p className="text-gray-600 mb-4">Category: {book.category}</p>
+              <h2 className="text-xl font-semibold mb-2 text-purple-200">
+                <span className="text-purple-400">{index+1}.</span> {book.title}
+              </h2>
+              <p className="text-gray-300 mb-1"><span className="text-purple-300">Author:</span> {book.author}</p>
+              <p className="text-gray-300 mb-4"><span className="text-purple-300">Category:</span> {book.category}</p>
               
               {book.description && (
-                <p className="text-gray-500 text-sm mb-4">
+                <p className="text-gray-400 text-sm mb-4 italic">
                   {book.description.length > 100 
                     ? `${book.description.substring(0, 100)}...` 
                     : book.description}
@@ -75,10 +76,10 @@ const Collection = () => {
               )}
               
               <div className="flex justify-between items-center">
-                <span className="text-sm text-gray-500">
+                <span className={`text-sm ${book.isFree ? 'text-green-400' : 'text-amber-400'}`}>
                   {book.isFree ? 'Free' : `$${book.price}`}
                 </span>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded transition">
+                <button className="bg-purple-700 hover:bg-purple-600 text-white px-4 py-2 rounded transition-colors border border-purple-600">
                   View Details
                 </button>
               </div>
