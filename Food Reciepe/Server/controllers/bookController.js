@@ -1,7 +1,19 @@
 import Store from "../models/bookModels.js"; 
-export const getBook =  (req, res) => {
+export const getBooks = async (req, res) => {
+    try {
+        const books = await Store.find();
+        res.json(books); // Directly sending the array
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+}
 
-    res.json({ message: "Hello" });
+
+
+export const getBook =  async  (req, res) => {
+
+   const book =  await Store.findById(req.params.id)
+    res.json(book)
 
 }
 
@@ -31,9 +43,29 @@ export const addBook = async (req, res) => {
 
 }
 
-export const editBook =  (req, res) => {
+export const editBook = async  (req, res, next) => {
 
-    res.json({ message: "Hello" });
+
+    const {author , title , description , category, price } = req.body
+    const book = await Store.findById(req.params.id);
+
+    try {
+
+        if(book){
+            await Store.findByIdAndUpdate(req.params.id , req.body, {new: true});
+            res.json({author , title , description , category, price})
+        }
+        next()
+        
+    } catch (error) {
+
+        res.status(404).json({message: "book not Available"})
+        
+        
+    }
+
+
+  
 
 }
 
