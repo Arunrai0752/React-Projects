@@ -13,15 +13,20 @@ const Navbar = () => {
         setLogIsOpen(true);
     };
 
+   
+
+
+
     const handleLogout = () => {
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
-        
+
         setIsLoggedIn(false);
         setUser(null);
-        
+
         navigate('/');
     };
+
 
     return (
         <header className="w-full h-[100px] bg-gray-900 border-b border-purple-900 shadow-lg">
@@ -85,7 +90,7 @@ const Navbar = () => {
                         </li>
                     </ul>
                 </nav>
-            
+
                 <Log
                     isOpen={logIsOpen}
                     onClose={() => setLogIsOpen(false)}

@@ -79,7 +79,28 @@ export const loginUser = async (req, res, next) => {
     }
 
 }
-export const getUserData = async () => { 
-    
+
+export const getUserData = async (req, res, next) => {
+    const currentUser = req.user;
+
+    if (!currentUser) {
+        const error = new Error("User Not Found !! Login Again");
+        error.statusCode = 401;
+        return next(error);
+    }
+
+    try {
+        res.status(200).json({
+            message: `Welcome Back ${currentUser.fullName}`,
+            data: currentUser,
+        });
+
+
+    } catch (error) {
+        next(error);
+
+    }
+
+
 }
 export const LogoutUser = async () => { }

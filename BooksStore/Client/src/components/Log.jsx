@@ -3,16 +3,28 @@ import { GiCrossedAxes } from "react-icons/gi";
 import api from '../config/api';
 import { useNavigate } from 'react-router-dom';
 
+
 const Log = ({ isOpen, onClose }) => {
-    const navigate = useNavigate();
+    // page navigate krne ke liye
+    const navigate = useNavigate();  
+
+    // Page define krne ke liye hai ki signUp ka page hai ya nhi if true signup hai nhito login
     const [isSignUp, setIsSignUp] = useState(false);
+
+
+    //SignUp or login Form ka data fill krwa rhe hai uska Data setFormData se FormData me Set Ho rha hai 
     const [formData, setFormData] = useState({
         fullName: "",
         email: "",
         occupation: "",
         password: ""
     });
+
+
+    //  isse normal ye false rhega or hame jab bhi kisi buttton ko loding me lagana hoga toh isko true kr denge or jab kaam hone par hatana hoga toh false
     const [isLoading, setIsLoading] = useState(false);
+
+    //jab bhi error aane ka hoga toh isme set error me fill hio jayega fir neeche html me hum check krenge kiisme se koi available hai kya or agar available hoga toh erroe denge
     const [errors, setErrors] = useState({
         fullName: "",
         email: "",
@@ -20,7 +32,8 @@ const Log = ({ isOpen, onClose }) => {
         password: ""
     });
 
-    
+    //  isme htm me onChange par baar baar ye funcltion call hoga or harfield ka data uske name se milte hue setformdata ke variable me fill krega 
+    //  second me if agar koi erroe hai toh usko empty string se replase kr rh9 hai
     const handleOnChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
@@ -31,9 +44,13 @@ const Log = ({ isOpen, onClose }) => {
     };
 
 
-    
+    //  Ye andhar batata hun kya ho rha hai
     const validateForm = () => {
+
+        // agar kahi bhi mistake hoti hai toh ek banda rhega pakadne ke liye ye checker hai
         let valid = true;
+
+        // ?ye collector hai ye collect krega sabhi galtiyon ko
         const newErrors = {
             fullName: "",
             email: "",
@@ -42,7 +59,9 @@ const Log = ({ isOpen, onClose }) => {
             form: ""
         };
 
-        // Common validations for both login and signup
+
+        // phle check krenge vo fields jo commen hai login me or signup me Email 
+        // / ye check kr rha hai ki email me koi reges ki glti ya empty fields hai kya agar hai toh Collector ko dedo
         if (!formData.email.trim()) {
             newErrors.email = "Email is required";
             valid = false;
@@ -50,17 +69,13 @@ const Log = ({ isOpen, onClose }) => {
             newErrors.email = "Email is invalid";
             valid = false;
         }
+        
 
-        if (!formData.password) {
-            newErrors.password = "Password is required";
-            valid = false;
-        } else if (formData.password.length < 6) {
-            newErrors.password = "Password must be at least 6 characters";
-            valid = false;
-        }
-
-        // Signup specific validations
+        // Ab Specialy Login bhi included hai 
+        
         if (isSignUp) {
+
+            // agar isme koi galti hogi toh collector lwe lega jese field khali hona 
             if (!formData.fullName.trim()) {
                 newErrors.fullName = "Full name is required";
                 valid = false;
@@ -71,19 +86,29 @@ const Log = ({ isOpen, onClose }) => {
             }
         }
 
+        // ab ye collector  sara data seterror ko dega jo error me ye data jake daal dega or Agar error ki koi bhi field Full hai ya fill hai toh neeche HTMl wale section me ye checke check krega ki kisike pass data hai toh
+        //  error do lekin directly nhi jab ye function call hoga tab oir ye function call hoga submit ke time  
         setErrors(newErrors);
         return valid;
     };
 
 
+    //  isme chalo andhar 
     const handleOnSubmit = async (e) => {
+
+    // yaha form ke default reloader ko roka gaya ruka bhaiya 
         e.preventDefault();
-        
+
+
+        // fir valedateform ko check kiya gya (valid function yaad hai na sabhi field check hoge aghar ek bhi galat hui false aayega or yahise return hoga )
+        // or eoor fileld jese hi fill hui Error samne aa jaega 
         if (!validateForm()) {
             return;
         }
 
+        // Agar form valid hai toh loading true kr denge jisse sabhi field disable ho jaegi or user ka controll nhi rhega 
         setIsLoading(true);
+        // Error filelds ko  khali kr liya kisse koi bhi purana error tang na kre 
         setErrors({
             fullName: "",
             email: "",
@@ -91,15 +116,27 @@ const Log = ({ isOpen, onClose }) => {
             password: ""
         });
 
+
+        //  yaha ho ye rha hai ki agar issignup true hua toh signUp wala kaam ho mhi toh Login Wala if else endpoint me string jaehgi
+        // SignUp ke liye Register or login ke liye login jisse me aange url li field page ke hisaab se bnau agar usser ne signup kiya toh call hoga url /user/register nhito /user/login
         const endpoint = isSignUp ? "register" : "login";
+
+        // yahase  data utha rhe hai agar user ne signUp par kaam kiya toh sigup ka nhitoh Login ka 
         const payload = isSignUp ? formData : {
             email: formData.email,
             password: formData.password
         };
 
+
+        // ?Yaha hoga Asli kaam 
         try {
+            // Yaha signUp or Login Ka url bneha ki bakend me kaha jana hai or konsa data leke jana hai res me or uske jesa output mylb res aayega 
+            // ?res m da chese bheji mene jese message or data
+            // bakend me mene cookies me jstoken bhej diya with time 
+
             const res = await api.post(`/user/${endpoint}`, payload);
-            
+
+            // or yaha par form ko clear krdiya
             setFormData({
                 fullName: "",
                 email: "",
@@ -107,22 +144,33 @@ const Log = ({ isOpen, onClose }) => {
                 password: ""
             });
 
-            if (!isSignUp && res.data.token) {
-                localStorage.setItem('authToken', res.data.token);
-            }
 
-            setIsSignUp(prev => !prev);
-            onClose();
+            // ?isme Agart signUp page  tha toh login ho jaega 
+            // Or Agar login Page tha toh navigate ho jaega or page close 
+          
+            if(isSignUp){
+                  setIsSignUp(false);
+                  return;
+            }
+           navigate("/collections")
+           onClose()
 
         } catch (error) {
+            // ye jab hoga tab koi erro aayega or error form error,form me aa jaeaga
             const errorMsg = error.response?.data?.message || 
                            "An error occurred. Please try again.";
             setErrors(prev => ({ ...prev, form: errorMsg }));
         } finally {
+
+            //  Yaha Finalyy loading bnd ho jaegi useer Access the field
             setIsLoading(false);
         }
     };
 
+
+//    Yaha esa hai ki Neeche Signup or Lohin Page ko toggle krne ke liye ye function banaya hai jisse agar login hai toh button apar click krne par ye function call hoga or page change 
+
+// Agar pAge change toh Data GAya purane page ka oR Error Bhi
     const toggleAuthMode = () => {
         setIsSignUp(prev => !prev);
         setFormData({
@@ -139,6 +187,7 @@ const Log = ({ isOpen, onClose }) => {
         });
     };
 
+    // Agar is ope True Hoga tabhi page popup karega nhito page Gayab 
     if (!isOpen) return null;
 
     return (

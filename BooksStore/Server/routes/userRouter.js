@@ -8,6 +8,6 @@ import { Protect } from "../middlewares/authmiddleware.js";
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/logout", LogoutUser);
-router.get("/getData", getUserData);
+router.get("/getData",Protect, getUserData);
 
 export default router;
