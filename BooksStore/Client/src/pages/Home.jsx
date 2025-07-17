@@ -1,11 +1,32 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { IoIosAdd } from "react-icons/io";
 import { BsCollection } from "react-icons/bs";
+import api from '../config/api';
+
+
 
 
 
 const Home = () => {
+    const [userData , setUserData] = useState("");
+
+  const fetchUserData = async () => {
+    try {
+      const res = await api.get("/user/getData");
+      setUserData(res.data.data);
+    } catch (error) {
+      toast.error(
+        `Error : ${error.response?.status || error.message} | ${error.response?.data.message || ""
+        }`
+      );
+    }
+  };
+
+    useEffect(()=>{
+        fetchUserData()
+
+    },[])
     return (
         <main className="min-h-screen bg-gradient-to-br from-gray-900 to-gray-800 overflow-hidden">
           
@@ -13,7 +34,7 @@ const Home = () => {
             <div className="container mx-auto px-6 py-16 flex flex-col lg:flex-row items-center justify-between relative z-10">
                 <div className="lg:w-1/2 mb-12 lg:mb-0 space-y-8 pr-0 lg:pr-12">
                     <h1 className="text-5xl md:text-6xl xl:text-7xl font-bold text-gray-100 leading-tight">
-                        Welcome Back, <span className="text-purple-400 font-serif italic">Arun Rai</span>!
+                        Welcome , <span className="text-purple-400 font-serif italic">in Storebook</span>!
                     </h1>
                     
                     <p className="text-xl md:text-2xl text-gray-300 leading-relaxed font-light max-w-2xl">

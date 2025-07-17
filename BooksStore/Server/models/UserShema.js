@@ -19,7 +19,7 @@ const userSchema = mongoose.Schema({
         require: true,
         
     },
-     Occupation:{
+     occupation:{
         type: String,
         require: true,
         

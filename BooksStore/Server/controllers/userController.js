@@ -1,13 +1,13 @@
 import bcrypt from "bcrypt"
 import User from "../models/UserShema.js"
+import gentoken from "../utils/auth.js"
 
 
 
 export const registerUser = async (req, res, next) => {
     try {
 
-        const { fullName, email , password , Occupation
-        } = req.body
+        const { fullName, email, password, occupation } = req.body
 
 
         if (!fullName) {
@@ -19,18 +19,18 @@ export const registerUser = async (req, res, next) => {
         if (!password) {
             return res.status(400).json({ message: "password Field Can't be Empty" });
         }
-        if (!Occupation) {
+        if (!occupation) {
             return res.status(400).json({ message: "Occupation Field Can't be Empty" });
         }
 
-        const user = await User.findOne({email});
+        const user = await User.findOne({ email });
         if (user) {
             return res.status(400).json({ message: "Email is Already Exist" });
         }
 
         const hasedPass = await bcrypt.hash(password, 10);
         const newUser = await User.create({
-            fullName, email, Occupation, password: hasedPass
+            fullName, email, occupation, password: hasedPass
         });
 
         return res.status(200).json({ message: "Registration Successfully" });
@@ -39,5 +39,47 @@ export const registerUser = async (req, res, next) => {
         next(error);
     }
 }
-export const loginUser = async () => { }
+export const loginUser = async (req, res, next) => {
+    try {
+
+        const { email, password } = req.body;
+        if (!email || !password) {
+            return res.json({ message: "Email & Password Both Are Required" })
+        }
+
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            const error = new Error("User Not registered");
+            error.statusCode = 408;
+            return next(error);
+        }
+
+
+        const isVerified = await bcrypt.compare(password, user.password);
+
+        if (!isVerified) {
+            const error = new Error("Invalid Username or Password");
+            error.statusCode = 401;
+            return next(error);
+        }
+
+
+        gentoken(user._id, res);
+
+        res.status(200).json({
+            message: `WelcomeBack ${user.fullName}`,
+            data: user,
+        });
+
+
+    } catch (error) {
+        next(error);
+
+    }
+
+}
+export const getUserData = async () => { 
+    
+}
 export const LogoutUser = async () => { }
