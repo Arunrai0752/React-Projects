@@ -17,9 +17,9 @@ export const getBook =  async  (req, res) => {
 
 }
 
-export const addBook = async (req, res) => {
+export const addBook = async (req, res , next ) => {
 
-   const {author , title , description , category, price } = req.body
+   const {title , author , description , category, price } = req.body
 
    if(!title || !author ){
     res.json({message: "Author & Title  can't be empty"})
@@ -39,9 +39,8 @@ export const addBook = async (req, res) => {
     next(error);
     
    }
-
-
 }
+
 
 export const editBook = async  (req, res, next) => {
 

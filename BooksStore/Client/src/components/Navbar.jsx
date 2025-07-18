@@ -1,32 +1,59 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Log from './Log';
+import api from '../config/api';
 
 const Navbar = () => {
     const [logIsOpen, setLogIsOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
-
 
     const handleLogin = () => {
         setLogIsOpen(true);
     };
 
-   
-
-
-
-    const handleLogout = () => {
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-
-        setIsLoggedIn(false);
-        setUser(null);
-
-        navigate('/');
+    const fetchUserData = async () => {
+        try {
+            setLoading(true);
+            const res = await api.get("/user/getData");
+            if (res.data && res.data.data) {
+                setIsLoggedIn(true);
+                setUser(res.data.data);
+            }
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            setIsLoggedIn(false);
+            setUser(null);
+        } finally {
+            setLoading(false);
+        }
     };
 
+    const handleLogout = async () => {
+        try {
+            setLoading(true);
+            const res =  await api.get("/user/logout");
+            setIsLoggedIn(false);
+            setUser(null);
+            navigate('/');
+            window.location.reload()
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+        finally{
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchUserData();
+    }, [logIsOpen  ]);
+
+    if (loading) {
+        return <div className="w-full h-[100px] bg-gray-900"></div>;
+    }
 
     return (
         <header className="w-full h-[100px] bg-gray-900 border-b border-purple-900 shadow-lg">

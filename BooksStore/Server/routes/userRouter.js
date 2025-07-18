@@ -7,7 +7,7 @@ import { Protect } from "../middlewares/authmiddleware.js";
 
 router.post("/register", registerUser);
 router.post("/login", loginUser);
-router.get("/logout", LogoutUser);
+router.get("/logout",Protect, LogoutUser);
 router.get("/getData",Protect, getUserData);
 
 export default router;

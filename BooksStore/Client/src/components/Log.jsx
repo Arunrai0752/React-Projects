@@ -4,12 +4,12 @@ import api from '../config/api';
 import { useNavigate } from 'react-router-dom';
 
 
-const Log = ({ isOpen, onClose }) => {
+const Log = ({ isOpen, onClose , defaultSignUp = false }) => {
     // page navigate krne ke liye
     const navigate = useNavigate();  
 
     // Page define krne ke liye hai ki signUp ka page hai ya nhi if true signup hai nhito login
-    const [isSignUp, setIsSignUp] = useState(false);
+    const [isSignUp, setIsSignUp] = useState(defaultSignUp);
 
 
     //SignUp or login Form ka data fill krwa rhe hai uska Data setFormData se FormData me Set Ho rha hai 
@@ -148,11 +148,14 @@ const Log = ({ isOpen, onClose }) => {
             // ?isme Agart signUp page  tha toh login ho jaega 
             // Or Agar login Page tha toh navigate ho jaega or page close 
           
-            if(isSignUp){
-                  setIsSignUp(false);
-                  return;
-            }
-           navigate("/collections")
+            // if(isSignUp){
+            //       setIsSignUp(false);
+            //       return;
+            // }
+
+            
+           navigate("/")
+           window.location.reload()
            onClose()
 
         } catch (error) {

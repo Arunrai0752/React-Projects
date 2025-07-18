@@ -103,4 +103,36 @@ export const getUserData = async (req, res, next) => {
 
 
 }
-export const LogoutUser = async () => { }
+
+// export const LogoutUser = async (req, res, next) => {
+
+//     try {
+//        await res.cookies("IDCard", "", { maxAge: 0 });
+//         res.status(200), json("Logout Succesfully");
+
+//     } catch (error) {
+//         next(error)
+
+//     }
+// }
+
+export const LogoutUser = async (req, res, next) => {
+    try {
+        // कुकी को क्लियर करें
+        res.clearCookie('IDCard', {
+            httpOnly: true,
+            sameSite: 'strict',
+            path: '/'
+        });
+
+        // सही JSON रिस्पॉन्स भेजें
+        res.status(200).json({
+            success: true,
+            message: "Logged out successfully"
+        });
+
+    } catch (error) {
+        console.error('Logout error:', error);
+        next(error);
+    }
+};

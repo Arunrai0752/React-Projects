@@ -5,6 +5,8 @@ import { BsCollection } from "react-icons/bs";
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '../config/api';
+import Log from '../components/Log';
+
 
 const Home = () => {
     const [userData, setUserData] = useState({
@@ -13,13 +15,14 @@ const Home = () => {
         occupation: ""
     });
     const [isLoading, setIsLoading] = useState(true);
+    const [AccounrCreate , setAccountCreate] = useState(false)
 
     const fetchUserData = async () => {
         try {
             setIsLoading(true);
             const res = await api.get("/user/getData");
             console.log(res)
-            
+
             setUserData(res.data.data);
             toast.success("User data loaded successfully!");
         } catch (error) {
@@ -32,6 +35,9 @@ const Home = () => {
             setIsLoading(false);
         }
     };
+    const handleSignUp =() => {
+        setAccountCreate(true)
+    }
 
     useEffect(() => {
         fetchUserData();
@@ -61,13 +67,21 @@ const Home = () => {
                     </p>
 
                     <div className="flex flex-wrap gap-4 mt-8">
+                        {userData.email ? 
                         <Link
                             to="/post"
                             className="px-8 py-4 bg-gradient-to-r from-purple-800 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-purple-900 hover:to-purple-700 transition-all duration-300 text-lg font-medium flex items-center gap-2"
                         >
                             <IoIosAdd className='text-3xl' />
                             Add Your Book
-                        </Link>
+                        </Link> : 
+                        <button
+                           onClick={handleSignUp}
+                            className="px-8 py-4 bg-gradient-to-r from-purple-800 to-purple-600 text-white rounded-xl shadow-lg hover:shadow-xl hover:from-purple-900 hover:to-purple-700 transition-all duration-300 text-lg font-medium flex items-center gap-2"
+                        >
+                            <IoIosAdd className='text-3xl' />
+                            Create A new Account
+                        </button>}
                         <Link
                             to="/collections"
                             className="px-8 py-4 border-2 border-purple-600/30 bg-gray-800/50 text-purple-300 rounded-xl hover:bg-gray-700/80 hover:border-purple-500/40 transition-all duration-300 text-lg font-medium flex items-center gap-2 backdrop-blur-sm"
@@ -96,6 +110,14 @@ const Home = () => {
             <div className="fixed right-4 bottom-4 text-sm text-purple-400 font-serif italic tracking-wider">
                 Crafted with <span className="text-red-500">♥</span> by Arun Rai
             </div>
+
+            <Log
+            isOpen={AccounrCreate}
+            onClose={() => setAccountCreate(false)}
+            defaultSignUp={true}
+            
+
+            />
         </main>
     );
 };
