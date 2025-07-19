@@ -145,7 +145,7 @@ const Log = ({ isOpen, onClose , defaultSignUp = false }) => {
             });
 
 
-            // ?isme Agart signUp page  tha toh login ho jaega 
+            // ?isme Agar signUp page  tha toh login ho jaega 
             // Or Agar login Page tha toh navigate ho jaega or page close 
           
             // if(isSignUp){

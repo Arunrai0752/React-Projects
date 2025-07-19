@@ -15,7 +15,7 @@ const Home = () => {
         occupation: ""
     });
     const [isLoading, setIsLoading] = useState(true);
-    const [AccounrCreate , setAccountCreate] = useState(false)
+    const [AccountCreate , setAccountCreate] = useState(false)
 
     const fetchUserData = async () => {
         try {
@@ -82,13 +82,20 @@ const Home = () => {
                             <IoIosAdd className='text-3xl' />
                             Create A new Account
                         </button>}
-                        <Link
+                       {userData.email?  <Link
                             to="/collections"
                             className="px-8 py-4 border-2 border-purple-600/30 bg-gray-800/50 text-purple-300 rounded-xl hover:bg-gray-700/80 hover:border-purple-500/40 transition-all duration-300 text-lg font-medium flex items-center gap-2 backdrop-blur-sm"
                         >
                             <BsCollection className='text-3xl' />
                             Explore Collection
-                        </Link>
+                        </Link>:
+                         <Link
+                            onClick={()=>{setAccountCreate(true)}}
+                            className="px-8 py-4 border-2 border-purple-600/30 bg-gray-800/50 text-purple-300 rounded-xl hover:bg-gray-700/80 hover:border-purple-500/40 transition-all duration-300 text-lg font-medium flex items-center gap-2 backdrop-blur-sm"
+                        >
+                            <BsCollection className='text-3xl' />
+                            Explore Collection
+                        </Link>}
                     </div>
                 </div>
 
@@ -112,7 +119,7 @@ const Home = () => {
             </div>
 
             <Log
-            isOpen={AccounrCreate}
+            isOpen={AccountCreate}
             onClose={() => setAccountCreate(false)}
             defaultSignUp={true}
             

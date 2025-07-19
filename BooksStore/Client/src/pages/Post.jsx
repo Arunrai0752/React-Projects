@@ -170,8 +170,7 @@ const Post = () => {
               <label className='block text-gray-300 mb-2'>Book Cover Image</label>
               <input
                 type="file"
-                name='image'
-                accept='image/*'
+                name='file'
                 className='border border-gray-600 bg-gray-700 text-gray-200 p-2 rounded-lg w-full file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-purple-900 file:text-white hover:file:bg-purple-800'
               />
             </div>

@@ -4,10 +4,11 @@ import Log from './Log';
 import api from '../config/api';
 
 const Navbar = () => {
-    const [logIsOpen, setLogIsOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [user, setUser] = useState(null);
-    const [loading, setLoading] = useState(true);
+    const [logIsOpen, setLogIsOpen] = useState(false);   // Login modal open hai ya nahi
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // User logged in hai ya nahi
+    const [user, setUser] = useState(null);              // User ka data
+    const [loading, setLoading] = useState(true);        // Page load ho raha hai ya nahi
+
     const navigate = useNavigate();
 
     const handleLogin = () => {
@@ -34,7 +35,7 @@ const Navbar = () => {
     const handleLogout = async () => {
         try {
             setLoading(true);
-            const res =  await api.get("/user/logout");
+            const res = await api.get("/user/logout");
             setIsLoggedIn(false);
             setUser(null);
             navigate('/');
@@ -42,14 +43,14 @@ const Navbar = () => {
         } catch (error) {
             console.error("Logout failed:", error);
         }
-        finally{
+        finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchUserData();
-    }, [logIsOpen  ]);
+    }, [logIsOpen]);
 
     if (loading) {
         return <div className="w-full h-[100px] bg-gray-900"></div>;
@@ -83,11 +84,19 @@ const Navbar = () => {
                                 </Link>
                             </li>
                         )}
-                        <li>
-                            <Link to="/collections" className="text-gray-300 hover:text-white transition-all duration-300 hover:underline hover:underline-offset-8 decoration-purple-500 font-medium">
-                                Library
-                            </Link>
-                        </li>
+                        { isLoggedIn ?
+                        <li >
+                                <Link to="/collections" className="text-gray-300 hover:text-white transition-all duration-300 hover:underline hover:underline-offset-8 decoration-purple-500 font-medium">
+                                    Library
+                                </Link>
+                         </li>
+                         :
+                        <li onClick={()=> {setLogIsOpen(true)}} >
+                                <Link  className="text-gray-300 hover:text-white transition-all duration-300 hover:underline hover:underline-offset-8 decoration-purple-500 font-medium">
+                                    Library
+                                </Link>
+                         </li>
+                        }
                         <li>
                             <Link to="/about" className="text-gray-300 hover:text-white transition-all duration-300 hover:underline hover:underline-offset-8 decoration-purple-500 font-medium">
                                 About
