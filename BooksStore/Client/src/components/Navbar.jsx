@@ -22,6 +22,7 @@ const Navbar = () => {
             if (res.data && res.data.data) {
                 setIsLoggedIn(true);
                 setUser(res.data.data);
+                localStorage.setItem("user", JSON.stringify(res.data.data));
             }
         } catch (error) {
             console.error("Error fetching user data:", error);
@@ -97,6 +98,15 @@ const Navbar = () => {
                                 </Link>
                          </li>
                         }
+
+
+                        {isLoggedIn && (
+                            <li>
+                                <Link to="/mybooks" className="text-gray-300 hover:text-white transition-all duration-300 hover:underline hover:underline-offset-8 decoration-purple-500 font-medium">
+                                    My Books
+                                </Link>
+                            </li>
+                        )}
                         <li>
                             <Link to="/about" className="text-gray-300 hover:text-white transition-all duration-300 hover:underline hover:underline-offset-8 decoration-purple-500 font-medium">
                                 About

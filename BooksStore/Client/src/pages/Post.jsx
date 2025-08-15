@@ -8,10 +8,13 @@ const Post = () => {
   const navigate = useNavigate();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  
+  const user = localStorage.getItem("user");
+  const authorId = user ? JSON.parse(user)._id : null;
+
   const [bookData, setBookData] = useState({
     title: "",
     author: "",
+    authorID: authorId,
     description: "",
     category: "",
     price: "",
@@ -54,23 +57,24 @@ const Post = () => {
       }
 
       setIsLoading(true);
-      
+
       // const formData = new FormData();
       // formData.append('title', bookData.title);
       // formData.append('author', bookData.author);
       // formData.append('description', bookData.description);
       // formData.append('category', bookData.category);
       // formData.append('price', bookData.price);
-     
+
 
       // console.log(formData);
-     
-       await api.post("/book/add", bookData);
+
+      await api.post("/book/add", bookData);
 
       toast.success("Book added successfully!");
       setBookData({
         title: "",
         author: "",
+        authorID: " ",
         description: "",
         category: "",
         price: "",
@@ -87,7 +91,7 @@ const Post = () => {
   return (
     <>
       <main className='w-full h-screen max-h-[88.5vh] bg-gradient-to-br from-gray-900 to-black flex justify-center items-center'>
-  <div className='h-[80vh] w-[90vw] md:w-[60vw] bg-gray-800 relative rounded-lg border border-gray-600 shadow-lg shadow-purple-900/50 overflow-y-auto'>
+        <div className='h-[80vh] w-[90vw] md:w-[60vw] bg-gray-800 relative rounded-lg border border-gray-600 shadow-lg shadow-purple-900/50 overflow-y-auto'>
           <h1 className='text-center text-white text-3xl p-4 font-serif tracking-wider sticky top-0 bg-gray-800 z-10'>
             <span className='text-purple-400'>Add</span> Your <span className='text-red-500'>Book</span>
           </h1>

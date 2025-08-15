@@ -4,7 +4,7 @@ import booksimg from "../assets/Storebooks.jpg";
 const About = () => {
   return (
     <main className="min-h-screen bg-gradient-to-b from-gray-900 to-gray-800">
-      {/* Gothic decorative elements */}
+    
       <div className="absolute inset-0 opacity-10 pointer-events-none">
         <div className="absolute top-20 left-10 w-32 h-32 bg-purple-900 rounded-full mix-blend-multiply filter blur-xl"></div>
         <div className="absolute bottom-1/4 right-1/4 w-40 h-40 bg-red-900 rounded-full mix-blend-multiply filter blur-xl"></div>

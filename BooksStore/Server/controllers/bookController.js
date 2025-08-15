@@ -10,26 +10,38 @@ export const getBooks = async (req, res) => {
 
 
 
-export const getBook =  async  (req, res) => {
+export const getBooksById = async (req, res) => {
+    try {
 
-   const book =  await Store.findById(req.params.id)
-    res.json(book)
+        const book = await Store.find({ authorID: req.params.id });
+        console.log(req.params.id);
 
+        if (!book) {
+            return res.status(404).json({ message: "Book not found" });
+        }
+        res.json(book);
+
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
 }
 
 export const addBook = async (req, res , next ) => {
 
-   const {title , author , description , category, price } = req.body
-
+   const {title , author , description , authorID,  category, price } = req.body
+   
+   
    if(!title || !author ){
-    res.json({message: "Author & Title  can't be empty"})
-    return;
-   }
+       res.json({message: "Author & Title  can't be empty"})
+       return;
+    }
+    console.log("i m Here");
+    
 
     try  {
 
         const newBook = await Store.create({
-            author , title , description , category, price
+            author , title , description ,authorID, category, price
         })
 
         res.status(200).json(newBook)
@@ -46,13 +58,15 @@ export const editBook = async  (req, res, next) => {
 
 
     const {author , title , description , category, price } = req.body
-    const book = await Store.findById(req.params.id);
+    const bookid = req.params.id
+    const book = await Store.findById(bookid);
+    const data = {author , title , description , category, price , "_id" : bookid };
 
     try {
 
         if(book){
-            await Store.findByIdAndUpdate(req.params.id , req.body, {new: true});
-            res.json({author , title , description , category, price})
+            await Store.findByIdAndUpdate(bookid ,  data, {new: true});
+            res.json({"data": data , "message": "Book updated successfully"});
         }
         next()
         
@@ -68,9 +82,14 @@ export const editBook = async  (req, res, next) => {
 
 }
 
-export const deleteBook =  (req, res) => {
+export const deleteBook =  (req, res , next ) => {
 
-    res.json({ message: "Hello" });
-
+    Store.findByIdAndDelete(req.params.id)
+        .then(() => {
+            res.status(200).json({ message: "Book deleted successfully" });
+        })
+        .catch((error) => {
+            res.status(500).json({ error: error.message });
+        }); 
 }
 

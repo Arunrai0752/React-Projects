@@ -10,6 +10,10 @@ const bookSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    authorID: {
+      type: String,
+      required: true,
+    },
     description: {
       type: String,
     },

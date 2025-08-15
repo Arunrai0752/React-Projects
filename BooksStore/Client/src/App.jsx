@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import Post from './pages/Post';
 import About from './pages/About';
 import Collection from './pages/Collections';
+import MyBooks from './pages/MyBooks';
 
 
 
@@ -14,10 +15,11 @@ function App() {
       <BrowserRouter>
         <Navbar />
         <Routes>
-          <Route path='/' element={<Home/>} />
+mybooks          <Route path='/' element={<Home/>} />
           <Route path='/post' element={<Post/>} />
           <Route path='/about' element={<About/>} />
           <Route path='/collections' element={<Collection/>} />
+          <Route path='/mybooks' element={<MyBooks/>} />
         </Routes>
       </BrowserRouter>
 
